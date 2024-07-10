@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model repository {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  userName      String
+  repo_url      String
+  createdAtRepo DateTime
+  createdAtDB   DateTime @default(now())
+  pulls         pulls[]
+}
+
+model pulls {
+  id                     String     @id @default(uuid())
+  number                 Int
+  title                  String
+  state                  String     @default("closed")
+  commits_url            String
+  repository             repository @relation(fields: [repo_name], references: [name])
+  repo_name              String
+  commits                commits[]
+  merged_at              DateTime
+  createdAtDB            DateTime   @default(now())
+  developmentTimeSeconds Int?
+
+  @@unique([repo_name, number])
+}
+
+model commits {
+  id          String   @id @default(uuid())
+  sha         String
+  pull        pulls    @relation(fields: [pullsNumber, repo_name], references: [number, repo_name])
+  pullsNumber Int
+  repo_name   String
+  date        DateTime
+  createdAtDB DateTime @default(now())
+
+  @@unique([sha, pullsNumber, repo_name])
+}

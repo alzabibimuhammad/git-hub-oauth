@@ -1,0 +1,43 @@
+.container {
+  height: 100vh;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginContainer {
+  background-color: black;
+  width: 500px;
+  height: 500px;
+  display: flex; /* Added display flex */
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  color: #fff;
+}
+
+.git_icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  cursor: pointer; /* Make the icon clickable */
+}
+
+.header {
+  font-size: 50px;
+  font-weight: 1000;
+  width: 100%;
+  text-align: center;
+}
+
+.arrow {
+  margin-top: 10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid red;
+}
