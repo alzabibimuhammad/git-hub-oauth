@@ -6,17 +6,16 @@ import { Box, Stack } from "@mui/material";
 import CustomButton from "@/components/@core/Button";
 import { showSuccessToastMessage } from "@/components/@core/Layout/notifySuccess";
 import { showErrorToastMessage } from "@/components/@core/Layout/notifyError";
+import { useRouter } from "next/router";
 
-export default function RepoComponent({ initialRepo, pat }) {
-  const [repo, setRepo] = useState(initialRepo);
-
+export default function RepoComponent({ repo }) {
+  const router = useRouter();
   const fetchRepo = async () => {
     try {
       const response = await GetRepos();
       if (response.status === 200) {
-        const data = response.data;
+        window.location.reload();
         showSuccessToastMessage("Data fetched and stored successfully");
-        setRepo(data.repo);
       } else {
         console.error("Response Error:", response.data.error);
         showErrorToastMessage(response.data.error);
@@ -34,7 +33,10 @@ export default function RepoComponent({ initialRepo, pat }) {
           <p className="Pagetitle">Repositories</p>
         </Box>
         <Stack direction={"row"} spacing={1}>
-          <CustomButton onClick={() => _} text={"Statistics"} />
+          <CustomButton
+            onClick={() => router.push("/statistcs")}
+            text={"Statistics"}
+          />
           <CustomButton onClick={() => fetchRepo()} text={"Fetch"} />
           <CustomButton onClick={() => signOut()} text={"Singout"} />
         </Stack>

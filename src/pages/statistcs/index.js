@@ -1,7 +1,7 @@
 import { getSessionUser } from "@/services/auth";
-import RepoService from "@/services/repositories";
+import PullRequestService from "@/services/pulls";
 
-export { default } from "./repo";
+export { default } from "./statistcs";
 
 export const getServerSideProps = async (context) => {
   try {
@@ -23,15 +23,13 @@ export const getServerSideProps = async (context) => {
           },
         };
     }
-
-    const repoService = new RepoService(
-      session.accessToken,
-      session.user.username
-    );
-    const repo = await repoService.getUserRepositories();
+    const pullServices = new PullRequestService();
+    const data = await pullServices.getRepoPulls();
+    const repos = await pullServices.getUniqueRepo();
     return {
       props: {
-        repo: repo,
+        data: data,
+        repos: repos,
       },
     };
   } catch (error) {

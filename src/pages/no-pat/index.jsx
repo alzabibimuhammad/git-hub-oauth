@@ -7,13 +7,12 @@ import {
   Button,
 } from "@mui/material";
 import { useState } from "react";
-import axios from "axios";
 import { showErrorToastMessage } from "@/components/@core/Layout/notifyError";
 import { storePat } from "@/api/pat";
 import { useRouter } from "next/router";
-import { getSessionUser } from "@/services/auth";
 import { getSession } from "next-auth/react";
 import PatService from "@/services/pat";
+import { showSuccessToastMessage } from "@/components/@core/Layout/notifySuccess";
 
 export default function NoPat({ username }) {
   const [pat, setPat] = useState("");
@@ -23,7 +22,8 @@ export default function NoPat({ username }) {
     if (pat) {
       try {
         const response = await storePat({ username, pat });
-        if (response?.status === 200) {
+
+        if (response?.status == 200) {
           showSuccessToastMessage("Personal Access Token saved successfully");
           route.push("/repo");
         }

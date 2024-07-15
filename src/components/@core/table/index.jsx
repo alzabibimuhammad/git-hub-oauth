@@ -3,21 +3,16 @@ import { Box, Stack, Typography } from "@mui/material";
 import { DataGrid, GridOverlay } from "@mui/x-data-grid";
 import { alpha, styled } from "@mui/material/styles";
 import { gridClasses } from "@mui/x-data-grid";
-import PaginationComponent from "../pagination";
 
 const ODD_OPACITY = 0.2;
 
 const Table = ({
   column,
   row,
-  label,
-  pagination,
-  setPage,
   setSelectedRow,
   selectedRow,
   rowHeight,
   checkboxSelection,
-  paginationFlag = true,
 }) => {
   const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
     [`& .${gridClasses.row}.even`]: {
@@ -64,7 +59,6 @@ const Table = ({
     <>
       <Stack>
         <Box sx={{ color: "#392467" }} width={"100%"}>
-          <h1 style={{ textAlign: "center" }}>{label}</h1>
           <StripedDataGrid
             rows={row}
             columns={column}
@@ -82,24 +76,6 @@ const Table = ({
               NoRowsOverlay: CustomNoRowsOverlay,
             }}
           />
-
-          {paginationFlag && (
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box>
-                <Typography> Rows : {pagination?.total} </Typography>
-              </Box>
-              <Box sx={{ display: "flex" }}>
-                <Typography>
-                  Current Page : {pagination?.currentPage} of{" "}
-                  {pagination?.lastPage}
-                </Typography>
-                <PaginationComponent
-                  setPage={setPage}
-                  pagination={pagination}
-                />
-              </Box>
-            </Box>
-          )}
         </Box>
       </Stack>
     </>

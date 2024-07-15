@@ -43,7 +43,6 @@ class RepoService {
   async fetchPullRequestsForRepos(repos) {
     const allPullRequests = [];
     for (const repo of repos) {
-      console.log(`Fetching pull requests for repo: ${repo.full_name}`);
       const pullRequests =
         await this.pullRequestService.fetchAndSavePullRequests(
           repo.full_name,
@@ -78,10 +77,8 @@ class RepoService {
     );
     await this.fetchPullRequestsForRepos(repos, this.accessToken);
     const pulls = await this.pullRequestService.getPulls();
-    return await this.commitService.fetchAndSaveCommits(
-      pulls,
-      this.accessToken
-    );
+    await this.commitService.fetchAndSaveCommits(pulls, this.accessToken);
+    return pulls;
   }
 }
 
