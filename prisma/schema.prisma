@@ -13,6 +13,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int          @id @default(autoincrement())
+  userName     String       @unique
+  pat          String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  repositories repository[]
+}
+
 model repository {
   id            String   @id @default(uuid())
   name          String   @unique
@@ -21,6 +30,7 @@ model repository {
   createdAtRepo DateTime
   createdAtDB   DateTime @default(now())
   pulls         pulls[]
+  user          User     @relation(fields: [userName], references: [userName])
 }
 
 model pulls {
