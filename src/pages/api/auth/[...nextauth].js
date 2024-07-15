@@ -1,3 +1,5 @@
+import { prisma } from "@/hooks/prisma";
+import UserService from "@/services/user";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
@@ -16,14 +18,22 @@ export const authOptions = {
       },
     }),
   ],
-  secret: process.env.JWT_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;
-        token.id = profile.id;
+        token.id = profile?.id;
         token.username = profile.login;
+        const userService = new UserService(profile.id, profile.login);
+
+        const existingUser = await userService.get();
+        if (!existingUser) {
+          await userService.store();
+        }
       }
+
       return token;
     },
     async session({ session, token }) {
