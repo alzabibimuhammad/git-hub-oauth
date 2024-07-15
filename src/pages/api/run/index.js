@@ -7,11 +7,11 @@ import RepoService from "@/services/repositories";
 const handler = async (req, res) => {
   try {
     const githubService = new GitHubServices();
-    const pullRequestService = new PullRequestService(prisma, githubService);
+    const pullRequestService = new PullRequestService(githubService);
     const commitService = new CommitService(pullRequestService, githubService);
 
     const repoServices = new RepoService(
-      "",
+      "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",
       "alzabibimuhammad",
       pullRequestService,
       commitService,
@@ -20,7 +20,7 @@ const handler = async (req, res) => {
 
     const result = await repoServices.run();
 
-    res.status(200).json({ data: result });
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

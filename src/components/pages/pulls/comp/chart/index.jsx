@@ -19,8 +19,8 @@ const DevTimeChart = ({ weeklyData }) => {
             {
               label: "Average Development Time (hours)",
               data: weeklyData.map((data) => data.averageDevTime / 3600),
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "#392467",
+              borderColor: "rgba(0, 0, 0, 1)",
               borderWidth: 1,
             },
           ],
@@ -36,7 +36,7 @@ const DevTimeChart = ({ weeklyData }) => {
     }
   }, [weeklyData]);
 
-  return <canvas ref={chartRef} width="400" height="200"></canvas>;
+  return <canvas ref={chartRef}></canvas>;
 };
 
 export default DevTimeChart;

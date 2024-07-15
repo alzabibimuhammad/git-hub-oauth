@@ -1,6 +1,6 @@
 import RepoComponent from "@/components/pages/repo";
 
-const UserPage = ({ initialRepo, pat }) => {
-  return <RepoComponent initialRepo={initialRepo} pat={pat} />;
+const UserPage = ({ repo }) => {
+  return <RepoComponent repo={repo} />;
 };
 export default UserPage;

@@ -45,6 +45,10 @@ class PullRequestService {
       developmentTimeSeconds
     );
   }
+
+  getUniqueRepo() {
+    return this.pullsRepository.getUniqueRepo();
+  }
 }
 
 export default PullRequestService;
