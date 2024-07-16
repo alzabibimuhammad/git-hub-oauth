@@ -5,11 +5,11 @@ class UserService {
     this.userRepo = new UserRepository(id, username);
   }
 
-  async store() {
-    return await this.userRepo.store();
+  store() {
+    return this.userRepo.store();
   }
-  async get() {
-    return await this.userRepo.get();
+  get() {
+    return this.userRepo.get();
   }
 }
 export default UserService;

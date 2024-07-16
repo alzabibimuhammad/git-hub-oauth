@@ -10,8 +10,6 @@ import { useState } from "react";
 import { showErrorToastMessage } from "@/components/@core/Layout/notifyError";
 import { storePat } from "@/api/pat";
 import { useRouter } from "next/router";
-import { getSession } from "next-auth/react";
-import PatService from "@/services/pat";
 import { showSuccessToastMessage } from "@/components/@core/Layout/notifySuccess";
 
 export default function NoPat({ username }) {
@@ -104,34 +102,3 @@ export default function NoPat({ username }) {
     </Grid>
   );
 }
-
-export const getServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (session) {
-    const patService = new PatService(null, session?.user?.username);
-    const user = await patService.get();
-    const pat = user?.pat;
-
-    if (pat)
-      return {
-        redirect: {
-          destination: "/repo",
-          permanent: false,
-        },
-      };
-    else
-      return {
-        props: {
-          username: session.user.username,
-        },
-      };
-  } else {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-};

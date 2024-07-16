@@ -1,6 +1,6 @@
-import { getSession } from "next-auth/react";
 import PullRequestService from "@/services/pulls";
 import PullsComponent from "@/components/pages/pulls";
+import { getSessionUser } from "@/services/auth";
 
 const PullRequestsPage = ({ data, error }) => {
   return <PullsComponent data={data} error={error} />;
@@ -8,7 +8,7 @@ const PullRequestsPage = ({ data, error }) => {
 
 export const getServerSideProps = async (context) => {
   const { repo } = context.params;
-  const session = await getSession(context);
+  const { session, pat } = await getSessionUser(context);
 
   if (!session) {
     return {
@@ -17,6 +17,14 @@ export const getServerSideProps = async (context) => {
         permanent: false,
       },
     };
+  } else {
+    if (!pat)
+      return {
+        redirect: {
+          destination: "/no-pat",
+          permanent: false,
+        },
+      };
   }
 
   try {

@@ -1,10 +1,12 @@
 import { prisma } from "@/hooks/prisma";
+import { PromisePool } from "@supercharge/promise-pool";
 
 class CommitsRepository {
   prisma = prisma;
   async upsertCommits(commits, prNumber, repoName) {
-    for (const commit of commits) {
-      try {
+    await PromisePool.for(commits)
+      .withConcurrency(5)
+      .process(async (commit) => {
         await this.prisma.commits.upsert({
           where: {
             sha_pullsNumber_repo_name: {
@@ -23,14 +25,11 @@ class CommitsRepository {
             date: new Date(commit.commit.author.date),
           },
         });
-      } catch (error) {
-        console.error(`Failed to upsert commit ${commit.sha}:`, error);
-      }
-    }
+      });
   }
 
-  async getCommits() {
-    return await this.prisma.commits.findMany();
+  getCommits() {
+    return this.prisma.commits.findMany();
   }
 }
 export default CommitsRepository;

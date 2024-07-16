@@ -6,23 +6,21 @@ class UserRepository {
     this.id = id;
     this.username = username;
   }
-  async store() {
-    const user = await prisma.user.create({
+  store() {
+    return prisma.user.create({
       data: {
         id: this.id,
         userName: this.username,
       },
     });
-    return user;
   }
 
-  async get() {
-    const user = await prisma.user.findUnique({
+  get() {
+    return prisma.user.findUnique({
       where: {
         userName: this.username,
       },
     });
-    return user;
   }
 }
 export default UserRepository;

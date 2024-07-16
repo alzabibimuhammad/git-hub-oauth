@@ -56,16 +56,12 @@ class CommitService {
       : null;
   }
 
-  async upsertCommits(commits, prNumber, repoName) {
-    return await this.commitsRepository.upsertCommits(
-      commits,
-      prNumber,
-      repoName
-    );
+  upsertCommits(commits, prNumber, repoName) {
+    return this.commitsRepository.upsertCommits(commits, prNumber, repoName);
   }
 
-  async getCommits() {
-    return await this.commitsRepository.getCommits();
+  getCommits() {
+    return this.commitsRepository.getCommits();
   }
 }
 

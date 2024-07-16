@@ -1,5 +1,5 @@
 import { prisma } from "@/hooks/prisma";
-import chunkArray from "@/utils/chunk";
+import PromisePool from "@supercharge/promise-pool";
 
 class RepoRepositories {
   prisma = prisma;
@@ -22,13 +22,12 @@ class RepoRepositories {
     } catch {}
   }
 
-  async upsertRepositories(repos, CHUNK_SIZE) {
-    const repoChunks = chunkArray(repos, CHUNK_SIZE);
-
+  async upsertRepositories(repos, concurrencyLimit) {
     try {
-      for (const chunk of repoChunks) {
-        const upsertPromises = chunk.map((r) =>
-          this.prisma.repository.upsert({
+      await PromisePool.for(repos)
+        .withConcurrency(concurrencyLimit)
+        .process(async (r) => {
+          await this.prisma.repository.upsert({
             where: { name: r.name },
             update: {
               userName: r.owner.login,
@@ -41,12 +40,11 @@ class RepoRepositories {
               createdAtRepo: new Date(r.created_at).toISOString(),
               repo_url: r.clone_url,
             },
-          })
-        );
-
-        await Promise.all(upsertPromises);
-      }
-    } catch {}
+          });
+        });
+    } catch (error) {
+      console.error("Failed to upsert repositories:", error);
+    }
   }
 }
 export default RepoRepositories;
