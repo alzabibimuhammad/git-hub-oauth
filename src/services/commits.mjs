@@ -1,4 +1,4 @@
-import CommitsRepository from "@/repositories/commits";
+import CommitsRepository from "../repositories/commits.mjs";
 
 class CommitService {
   constructor(pullsServices, githupServices) {

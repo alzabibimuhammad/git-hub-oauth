@@ -1,4 +1,4 @@
-import PullRequestService from "@/services/pulls";
+import PullRequestService from "@/services/pulls.mjs";
 import PullsComponent from "@/components/pages/pulls";
 import { getSessionUser } from "@/services/auth";
 

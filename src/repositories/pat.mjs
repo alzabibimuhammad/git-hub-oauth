@@ -1,17 +1,19 @@
-import { prisma } from "@/hooks/prisma";
+import { prisma } from "../hooks/prisma.mjs";
 
 class PatRepository {
   prisma = prisma;
-  constructor(pat, username) {
+  constructor(id, pat, username) {
+    this.id = id;
     this.pat = pat;
     this.username = username;
   }
-  store() {
+  update() {
     return prisma.user.update({
       where: {
-        userName: this.username,
+        id: this.id,
       },
       data: {
+        userName: this.username,
         pat: this.pat,
       },
     });

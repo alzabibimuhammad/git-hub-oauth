@@ -1,5 +1,5 @@
 import { GetRepos } from "@/api/repo";
-import { signOut } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import RepoTable from "./comp/table";
 import { Box, Stack } from "@mui/material";
@@ -12,7 +12,11 @@ export default function RepoComponent({ repo }) {
   const router = useRouter();
   const fetchRepo = async () => {
     try {
-      const response = await GetRepos();
+      const session = await getSession();
+      const response = await GetRepos({
+        username: session.user.username,
+        pat: session.user.pat,
+      });
       if (response.status === 200) {
         router.replace(router.asPath);
         showSuccessToastMessage("Data fetched and stored successfully");
@@ -28,11 +32,23 @@ export default function RepoComponent({ repo }) {
 
   return (
     <>
-      <Box className="PageHeader">
+      <Box
+        className="PageHeader"
+        sx={{
+          display: { xs: "block", sm: "flex" },
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Box>
           <p className="Pagetitle">Repositories</p>
         </Box>
-        <Stack direction={"row"} spacing={1}>
+        <Stack
+          mt={{ xs: 1, sm: 0 }}
+          mb={{ xs: 1, sm: 0 }}
+          direction={"row"}
+          spacing={1}
+        >
           <CustomButton
             onClick={() => router.push("/statistcs")}
             text={"Statistics"}

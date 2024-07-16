@@ -1,6 +1,5 @@
-import { Box, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Grid, MenuItem, Paper, TextField } from "@mui/material";
 import { format, startOfWeek } from "date-fns";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DevTimeChart from "../pulls/comp/chart";
 import { GetStatitics } from "@/api/statistics";
@@ -12,7 +11,6 @@ export default function StatisticsComponent({ data, repos }) {
   const [selectedRepo, setSelectedRepo] = useState("");
   const processWeeklyData = (pullRequests) => {
     const Data = {};
-
     pullRequests.forEach((pr) => {
       const mergedDate = new Date(pr.merged_at);
       const weekStart = startOfWeek(mergedDate);
@@ -24,7 +22,6 @@ export default function StatisticsComponent({ data, repos }) {
           count: 0,
         };
       }
-
       Data[weekStartStr].totalDevTime += pr.developmentTimeSeconds;
       Data[weekStartStr].count += 1;
     });
@@ -32,7 +29,6 @@ export default function StatisticsComponent({ data, repos }) {
       week,
       averageDevTime: Data[week].totalDevTime / Data[week].count,
     }));
-
     setWeeklyData(formattedData);
   };
 
@@ -48,32 +44,36 @@ export default function StatisticsComponent({ data, repos }) {
     setData(data?.data);
   };
   return (
-    <Grid container>
+    <Grid container paddingLeft={{ xs: 0, sm: "10%" }} spacing={4}>
       <Grid item xs={9}>
-        <TextField
-          fullWidth
-          select
-          defaultValue=""
-          value={selectedRepo}
-          SelectProps={{
-            displayEmpty: true,
-            onChange: (e) => {
-              handleChange(e);
-            },
-          }}
-        >
-          <MenuItem value="" selected>
-            Repositories
-          </MenuItem>
-          {repos?.map((pr, index) => (
-            <MenuItem key={index} value={pr.repo_name}>
-              {pr.repo_name}
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <TextField
+            fullWidth
+            select
+            defaultValue=""
+            value={selectedRepo}
+            SelectProps={{
+              displayEmpty: true,
+              onChange: (e) => {
+                handleChange(e);
+              },
+            }}
+          >
+            <MenuItem value="" selected>
+              Repositories
             </MenuItem>
-          ))}
-        </TextField>
+            {repos?.map((pr, index) => (
+              <MenuItem key={index} value={pr.repo_name}>
+                {pr.repo_name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Paper>
       </Grid>
       <Grid item xs={10}>
-        <DevTimeChart weeklyData={weeklyData} />
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <DevTimeChart weeklyData={weeklyData} />
+        </Paper>
       </Grid>
     </Grid>
   );

@@ -1,19 +1,18 @@
 import { FaGithub } from "react-icons/fa";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { Grid, Paper, Stack, Typography } from "@mui/material";
-import { getSessionUser } from "@/services/auth";
-
+import React from "react";
 export default function Login() {
   const handleLogin = () => {
     signIn("github");
   };
 
   return (
-    <Grid container height={"100vh"}>
+    <Grid container height={"92.5vh"} overflow={"hidden"}>
       <Grid
         item
         md={6}
-        sm={7}
+        sm={12}
         xs={12}
         sx={{
           backgroundColor: "#392467",
@@ -55,11 +54,9 @@ export default function Login() {
       <Grid
         item
         md={6}
-        sm={5}
-        xs={0}
         sx={{
           height: "100%",
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -69,26 +66,3 @@ export default function Login() {
     </Grid>
   );
 }
-
-export const getServerSideProps = async (context) => {
-  const { session, pat } = await getSessionUser(context);
-  if (session) {
-    if (pat)
-      return {
-        redirect: {
-          destination: "/repo",
-          permanent: false,
-        },
-      };
-    else
-      return {
-        redirect: {
-          destination: "/no-pat",
-          permanent: false,
-        },
-      };
-  }
-  return {
-    props: {},
-  };
-};

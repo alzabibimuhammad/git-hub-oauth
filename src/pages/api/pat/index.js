@@ -1,11 +1,11 @@
-import PatService from "@/services/pat";
+import PatService from "../../../services/pat.mjs";
 
 const handler = async (req, res) => {
-  const { username, pat } = req.body;
+  const { id, username, pat } = req.body;
 
   try {
-    const patService = new PatService(pat, username);
-    const result = await patService.store();
+    const patService = new PatService(id, pat, username);
+    const result = await patService.update();
 
     res.status(200).json({ data: result });
   } catch (error) {

@@ -1,5 +1,5 @@
-import { getSessionUser } from "@/services/auth";
-import PullRequestService from "@/services/pulls";
+import { getSessionUser } from "../../services/auth.mjs";
+import PullRequestService from "../../services/pulls.mjs";
 
 export { default } from "./statistcs";
 

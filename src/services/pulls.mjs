@@ -1,4 +1,4 @@
-import PullsRepository from "@/repositories/pulls";
+import PullsRepository from "../repositories/pulls.mjs";
 
 class PullRequestService {
   constructor(githubServices) {
