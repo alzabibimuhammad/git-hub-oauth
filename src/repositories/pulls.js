@@ -1,45 +1,53 @@
 import { prisma } from "@/hooks/prisma";
+import { PromisePool } from "@supercharge/promise-pool";
 
 class PullsRepository {
   prisma = prisma;
+
   async store(pulls, repoName) {
     const repoShortName = repoName.split("/")[1];
-    for (const pr of pulls) {
-      if (!pr) {
-        console.error(
-          `Invalid pull request data for repo ${repoShortName}:`,
-          pr
-        );
-        continue;
-      }
-      try {
-        await this.prisma.pulls.upsert({
-          where: {
-            repo_name_number: {
-              repo_name: repoShortName,
-              number: pr.number,
+
+    await PromisePool.for(pulls)
+      .withConcurrency(5)
+      .process(async (pr) => {
+        if (!pr) {
+          console.error(
+            `Invalid pull request data for repo ${repoShortName}:`,
+            pr
+          );
+          return;
+        }
+        try {
+          await this.prisma.pulls.upsert({
+            where: {
+              repo_name_number: {
+                repo_name: repoShortName,
+                number: pr.number,
+              },
             },
-          },
-          update: {
-            title: pr.title,
-            state: pr.state,
-            commits_url: pr.commits_url,
-            merged_at: pr.merged_at,
-            repo_name: repoShortName,
-          },
-          create: {
-            number: pr.number,
-            title: pr.title,
-            state: pr.state,
-            commits_url: pr.commits_url,
-            merged_at: pr.merged_at,
-            repo_name: repoShortName,
-          },
-        });
-      } catch (error) {
-        console.error(`Failed to upsert pull request #${pr.number}:`, error);
-      }
-    }
+            update: {
+              title: pr.title,
+              state: pr.state,
+              commits_url: pr.commits_url,
+              merged_at: pr.merged_at,
+              repo_name: repoShortName,
+            },
+            create: {
+              number: pr.number,
+              title: pr.title,
+              state: pr.state,
+              commits_url: pr.commits_url,
+              merged_at: pr.merged_at,
+              repo_name: repoShortName,
+            },
+          });
+        } catch (error) {
+          console.error(
+            `Failed to upsert pull request #${pr.number} for repo ${repoShortName}:`,
+            error
+          );
+        }
+      });
   }
 
   async getPulls() {

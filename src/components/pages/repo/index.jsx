@@ -14,7 +14,7 @@ export default function RepoComponent({ repo }) {
     try {
       const response = await GetRepos();
       if (response.status === 200) {
-        window.location.reload();
+        router.replace(router.asPath);
         showSuccessToastMessage("Data fetched and stored successfully");
       } else {
         console.error("Response Error:", response.data.error);

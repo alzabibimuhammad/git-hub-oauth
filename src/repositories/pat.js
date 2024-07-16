@@ -17,15 +17,14 @@ class PatRepository {
     });
   }
 
-  async get() {
-    const pat = await prisma.user.findUnique({
+  get() {
+    return prisma.user.findUnique({
       where: {
         userName: this.username,
       },
 
       select: { pat: true, userName: true },
     });
-    return pat;
   }
 }
 export default PatRepository;

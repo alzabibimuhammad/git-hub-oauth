@@ -14,7 +14,7 @@ class RepoService {
     this.username = username;
     this.pullRequestService = pullRequestService;
     this.commitService = commitService;
-    this.CHUNK_SIZE = 20;
+    this.CHUNK_SIZE = 5;
     this.githubService = githubService;
     this.repoRepository = new RepoRepositories(username);
   }
@@ -23,15 +23,12 @@ class RepoService {
     return this.repoRepository.getRepoFromDb();
   }
 
-  async upsertRepositories(repos) {
-    return await this.repoRepository.upsertRepositories(repos, this.CHUNK_SIZE);
+  upsertRepositories(repos) {
+    return this.repoRepository.upsertRepositories(repos, this.CHUNK_SIZE);
   }
 
-  async fetchUserRepos() {
-    return await this.githubService.getRepositories(
-      this.accessToken,
-      this.username
-    );
+  fetchUserRepos() {
+    return this.githubService.getRepositories(this.accessToken, this.username);
   }
 
   async fetchAndSaveRepositories(username, accessToken) {

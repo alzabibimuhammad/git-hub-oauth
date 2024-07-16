@@ -11,7 +11,7 @@ const handler = async (req, res) => {
     const commitService = new CommitService(pullRequestService, githubService);
 
     const repoServices = new RepoService(
-      "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",
+      "",
       "alzabibimuhammad",
       pullRequestService,
       commitService,

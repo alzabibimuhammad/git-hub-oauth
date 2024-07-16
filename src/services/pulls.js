@@ -19,27 +19,23 @@ class PullRequestService {
     return savedPullRequests;
   }
 
-  async fetchPullRequests(repoName, accessToken) {
-    return await this.githubServices.getPulls(repoName, accessToken);
+  fetchPullRequests(repoName, accessToken) {
+    return this.githubServices.getPulls(repoName, accessToken);
   }
 
-  async savePulls(pulls, repoName) {
-    return await this.pullsRepository.store(pulls, repoName);
+  savePulls(pulls, repoName) {
+    return this.pullsRepository.store(pulls, repoName);
   }
 
-  async getPulls() {
-    return await this.pullsRepository.getPulls();
+  getPulls() {
+    return this.pullsRepository.getPulls();
   }
 
   getRepoPulls(repo) {
     return this.pullsRepository.getRepoPulls(repo);
   }
-  async updatePullRequestDevelopmentTime(
-    repoName,
-    prNumber,
-    developmentTimeSeconds
-  ) {
-    return await this.pullsRepository.updatePullRequestDevelopmentTime(
+  updatePullRequestDevelopmentTime(repoName, prNumber, developmentTimeSeconds) {
+    return this.pullsRepository.updatePullRequestDevelopmentTime(
       repoName,
       prNumber,
       developmentTimeSeconds
