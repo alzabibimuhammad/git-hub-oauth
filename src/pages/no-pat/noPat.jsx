@@ -11,33 +11,45 @@ import { showErrorToastMessage } from "@/components/@core/Layout/notifyError";
 import { storePat } from "@/api/pat";
 import { useRouter } from "next/router";
 import { showSuccessToastMessage } from "@/components/@core/Layout/notifySuccess";
+import { getUserName } from "@/api/github";
 
-export default function NoPat({ username }) {
+export default function NoPat({ id }) {
   const [pat, setPat] = useState("");
   const route = useRouter();
+  console.log("hi id", id);
 
   const handleSubmit = async () => {
     if (pat) {
-      try {
-        const response = await storePat({ username, pat });
+      const response = await getUserName(pat);
+      if (!response) {
+        showErrorToastMessage("Network error");
+        return;
+      }
+      if (response?.ok) {
+        const data = await response.json();
+        const username = data?.login;
+        try {
+          const response = await storePat({ id, username, pat });
 
-        if (response?.status == 200) {
-          showSuccessToastMessage("Personal Access Token saved successfully");
-          route.push("/repo");
-        }
-      } catch (error) {}
+          if (response?.status == 200) {
+            showSuccessToastMessage("Personal Access Token saved successfully");
+            route.push("/repo");
+          }
+        } catch (error) {}
+      } else {
+        showErrorToastMessage("this token is not good");
+      }
     } else {
-      console.error("PAT is required");
       showErrorToastMessage("Please write your PAT");
     }
   };
 
   return (
-    <Grid container height={"100vh"}>
+    <Grid container height={"92.5vh"}>
       <Grid
         item
         md={6}
-        sm={7}
+        sm={12}
         xs={12}
         sx={{
           backgroundColor: "#392467",
@@ -55,7 +67,7 @@ export default function NoPat({ username }) {
             alignItems: "center",
             justifyContent: "center",
             height: { xs: "70%", sm: "50%" },
-            width: { xs: "70%", sm: "50%" },
+            width: { xs: "80%", sm: "50%" },
           }}
         >
           <Stack
@@ -65,34 +77,42 @@ export default function NoPat({ username }) {
             justifyContent={"space-around"}
             height={"100%"}
           >
-            <Typography fontSize={{ xs: "25px", md: "25px" }} fontWeight={800}>
-              Add your personal access token
-            </Typography>
-            <TextField
-              label="PAT"
-              name="token"
-              value={pat}
-              onChange={(e) => setPat(e.target.value)}
-            />
-            <Button
-              onClick={handleSubmit}
-              type="submit"
-              variant="contained"
-              color="primary"
+            <Typography
+              ml={2}
+              fontSize={{ xs: "25px", md: "25px" }}
+              fontWeight={800}
             >
-              Submit
-            </Button>
+              Add your personal access token from github
+            </Typography>
+            <Stack width={"90%"} spacing={1}>
+              <TextField
+                label="PAT"
+                name="token"
+                value={pat}
+                fullWidth
+                onChange={(e) => setPat(e.target.value)}
+              />
+              <Stack width={"100%"} direction={"row"} justifyContent={"center"}>
+                <Button
+                  onClick={handleSubmit}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: "30%" }}
+                >
+                  Submit
+                </Button>
+              </Stack>
+            </Stack>
           </Stack>
         </Paper>
       </Grid>
       <Grid
         item
         md={6}
-        sm={5}
-        xs={0}
         sx={{
           height: "100%",
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           justifyContent: "center",
           alignItems: "center",
         }}

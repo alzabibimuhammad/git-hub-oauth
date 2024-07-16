@@ -104,13 +104,18 @@ body {
 .Pagetitle {
   margin: 0;
   padding: 5;
-  width: 900px;
+  width: 100%;
   font-size: 60px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   letter-spacing: 1.2px;
   color: #392467;
+}
+@media (max-width: 768px) {
+  .Pagetitle {
+    width: auto;
+  }
 }
 
 .custome-data-grid-font {
@@ -140,9 +145,6 @@ body {
 }
 
 .PageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
   box-shadow: 0;
   position: sticky;

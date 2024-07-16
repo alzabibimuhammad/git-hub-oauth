@@ -1,5 +1,5 @@
-import { prisma } from "@/hooks/prisma";
-import RepoRepositories from "@/repositories/repositories";
+import { prisma } from "../hooks/prisma.mjs";
+import RepoRepositories from "../repositories/repositories.mjs";
 
 class RepoService {
   prisma = prisma;
@@ -75,6 +75,7 @@ class RepoService {
     await this.fetchPullRequestsForRepos(repos, this.accessToken);
     const pulls = await this.pullRequestService.getPulls();
     await this.commitService.fetchAndSaveCommits(pulls, this.accessToken);
+    console.log("done");
     return pulls;
   }
 }

@@ -1,4 +1,4 @@
-import PullRequestService from "@/services/pulls";
+import PullRequestService from "../../../../services/pulls.mjs";
 
 const handler = async (req, res) => {
   const { repo } = req.query;

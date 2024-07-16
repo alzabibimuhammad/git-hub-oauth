@@ -1,16 +1,17 @@
-import { prisma } from "@/hooks/prisma";
-import PromisePool from "@supercharge/promise-pool";
+import { prisma } from "../hooks/prisma.mjs";
+import { PromisePool } from "@supercharge/promise-pool";
 
 class RepoRepositories {
   prisma = prisma;
   constructor(userName) {
     this.userName = userName;
   }
+
   async getRepoFromDb() {
     try {
       const repo = await this.prisma.repository.findMany({
         where: {
-          userName: this.username,
+          userName: this.userName,
         },
       });
 
@@ -19,13 +20,15 @@ class RepoRepositories {
         createdAtRepo: r.createdAtRepo.toISOString(),
         createdAtDB: r.createdAtDB.toISOString(),
       }));
-    } catch {}
+    } catch (error) {
+      console.error("Error fetching repositories from DB:", error);
+    }
   }
 
   async upsertRepositories(repos, concurrencyLimit) {
     try {
-      await PromisePool.for(repos)
-        .withConcurrency(concurrencyLimit)
+      await PromisePool.withConcurrency(concurrencyLimit)
+        .for(repos)
         .process(async (r) => {
           await this.prisma.repository.upsert({
             where: { name: r.name },
@@ -47,4 +50,5 @@ class RepoRepositories {
     }
   }
 }
+
 export default RepoRepositories;

@@ -1,4 +1,4 @@
-import { prisma } from "@/hooks/prisma";
+import { prisma } from "../hooks/prisma.mjs";
 import { PromisePool } from "@supercharge/promise-pool";
 
 class PullsRepository {

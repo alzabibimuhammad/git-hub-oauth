@@ -1,5 +1,5 @@
-import { getSessionUser } from "@/services/auth";
-import RepoService from "@/services/repositories";
+import { getSessionUser } from "../../services/auth.mjs";
+import RepoService from "../../services/repositories.mjs";
 
 export { default } from "./repo";
 

@@ -1,4 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { format, startOfWeek } from "date-fns";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -49,26 +58,57 @@ export default function PullsComponent({ data, error }) {
   return (
     <Box>
       <Typography className="Pagetitle">Pull Requests for {repo}</Typography>
-      {data?.length ? (
-        <>
-          <ul>
-            {data?.map((pr) => (
-              <li key={pr.id}>
-                <a href={pr.html_url} target="_blank" rel="noopener noreferrer">
-                  {pr.title}
-                </a>
-                {pr.developmentTimeSeconds && (
-                  <span> - Development Time: {pr.developmentTimeSeconds}</span>
-                )}
-              </li>
-            ))}
-          </ul>
+      <Grid container mt={{ xs: 7, sm: 5 }} spacing={{ xs: 3, sm: 0 }}>
+        {data?.length ? (
+          <>
+            <Grid
+              item
+              xs={12}
+              maxHeight={{ xs: 300, sm: 600 }}
+              overflow={"auto"}
+              sm={4}
+            >
+              <List sx={{ width: "100%", maxWidth: "100%" }}>
+                {data.map((pr) => (
+                  <ListItem key={pr.id}>
+                    <ListItemIcon></ListItemIcon>
+                    <ListItemText
+                      primary={<Typography variant="h6">{pr.title}</Typography>}
+                      secondary={
+                        <Typography variant="p">
+                          Development Time:{" "}
+                          <Typography variant="p" sx={{ color: "red" }}>
+                            {pr.developmentTimeSeconds}
+                          </Typography>
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
 
-          <div style={{ width: "1000px", height: "1000px" }}>
-            <DevTimeChart weeklyData={weeklyData} />
-          </div>
-        </>
-      ) : null}
+            <Grid item xs={12} sm={8}>
+              <Paper elevation={3} sx={{ p: 2 }}>
+                <DevTimeChart weeklyData={weeklyData} />
+              </Paper>
+            </Grid>
+          </>
+        ) : (
+          <Grid
+            item
+            xs={12}
+            height={"50vh"}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography variant="h3" color={"green"}>
+              No pull requests found.
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
     </Box>
   );
 }

@@ -1,18 +1,20 @@
-import { prisma } from "@/hooks/prisma";
-import CommitService from "@/services/commits";
-import GitHubServices from "@/services/githup";
-import PullRequestService from "@/services/pulls";
-import RepoService from "@/services/repositories";
+import CommitService from "../../../services/commits.mjs";
+import GitHubServices from "../../../services/githup.mjs";
+import PullRequestService from "../../../services/pulls.mjs";
+import RepoService from "../../../services/repositories.mjs";
 
 const handler = async (req, res) => {
+  const { username, pat } = req.body;
+  console.log("username", username);
+  console.log("pat", pat);
   try {
     const githubService = new GitHubServices();
     const pullRequestService = new PullRequestService(githubService);
     const commitService = new CommitService(pullRequestService, githubService);
 
     const repoServices = new RepoService(
-      "",
-      "alzabibimuhammad",
+      pat,
+      username,
       pullRequestService,
       commitService,
       githubService
