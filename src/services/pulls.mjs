@@ -31,8 +31,8 @@ class PullRequestService {
     return this.pullsRepository.getPulls();
   }
 
-  getRepoPulls(repo) {
-    return this.pullsRepository.getRepoPulls(repo);
+  getRepoPulls(username, repo) {
+    return this.pullsRepository.getRepoPulls(username, repo);
   }
   updatePullRequestDevelopmentTime(repoName, prNumber, developmentTimeSeconds) {
     return this.pullsRepository.updatePullRequestDevelopmentTime(
@@ -42,8 +42,8 @@ class PullRequestService {
     );
   }
 
-  getUniqueRepo() {
-    return this.pullsRepository.getUniqueRepo();
+  getUniqueRepo(username) {
+    return this.pullsRepository.getUniqueRepo(username);
   }
 }
 

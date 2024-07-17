@@ -29,7 +29,7 @@ export const getServerSideProps = async (context) => {
 
   try {
     const pullServices = new PullRequestService();
-    const data = await pullServices.getRepoPulls(repo);
+    const data = await pullServices.getRepoPulls(session.user.username, repo);
     return {
       props: {
         data: data,

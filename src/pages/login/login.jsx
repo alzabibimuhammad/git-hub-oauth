@@ -1,10 +1,10 @@
-import { FaGithub } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 import { Grid, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 export default function Login() {
   const handleLogin = () => {
-    signIn("github");
+    signIn("google");
   };
 
   return (
@@ -41,9 +41,9 @@ export default function Login() {
             height={"100%"}
           >
             <Typography fontSize={{ xs: "25px", md: "30px" }} fontWeight={800}>
-              Sign in with GitHub
+              Sign in with Google
             </Typography>
-            <FaGithub
+            <FaGoogle
               style={{ cursor: "pointer" }}
               onClick={handleLogin}
               size={55}
