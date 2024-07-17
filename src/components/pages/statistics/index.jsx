@@ -30,7 +30,7 @@ export default function StatisticsComponent({ data, repos, username }) {
       averageDevTime: Data[week].totalDevTime / Data[week].count,
     }));
 
-    formattedData.sort((a, b) => new Date(b.week) - new Date(a.week));
+    formattedData.sort((a, b) => new Date(a.week) - new Date(b.week));
 
     setWeeklyData(formattedData);
   };

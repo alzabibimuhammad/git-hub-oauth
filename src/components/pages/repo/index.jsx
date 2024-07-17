@@ -60,10 +60,12 @@ export default function RepoComponent({ repo }) {
           direction={"row"}
           spacing={1}
         >
-          <CustomButton
-            onClick={() => router.push("/statistcs")}
-            text={"Statistics"}
-          />
+          {repo?.length ? (
+            <CustomButton
+              onClick={() => router.push("/statistcs")}
+              text={"Statistics"}
+            />
+          ) : null}
           <CustomButton onClick={() => signOut()} text={"Singout"} />
         </Stack>
       </Box>

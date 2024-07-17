@@ -45,7 +45,7 @@ app.prepare().then(() => {
       if (err) throw err;
       console.log(`> Ready on http://localhost:${port}`);
 
-      cron.schedule("0 * * * *", fetchUserRepos);
+      cron.schedule("* * * * *", fetchUserRepos);
       console.log("Cron job scheduled to run every minute");
     });
 });
