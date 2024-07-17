@@ -73,7 +73,7 @@ class RepoService {
       this.accessToken
     );
     await this.fetchPullRequestsForRepos(repos, this.accessToken);
-    const pulls = await this.pullRequestService.getPulls();
+    const pulls = await this.pullRequestService.getRepoPulls(this.username);
     await this.commitService.fetchAndSaveCommits(pulls, this.accessToken);
     console.log("done");
     return pulls;

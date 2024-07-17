@@ -24,12 +24,13 @@ export const getServerSideProps = async (context) => {
         };
     }
     const pullServices = new PullRequestService();
-    const data = await pullServices.getRepoPulls();
-    const repos = await pullServices.getUniqueRepo();
+    const data = await pullServices.getRepoPulls(session.user.username);
+    const repos = await pullServices.getUniqueRepo(session.user.username);
     return {
       props: {
         data: data,
         repos: repos,
+        username: session.user.username,
       },
     };
   } catch (error) {

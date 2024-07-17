@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import DevTimeChart from "../pulls/comp/chart";
 import { GetStatitics } from "@/api/statistics";
 
-export default function StatisticsComponent({ data, repos }) {
+export default function StatisticsComponent({ data, repos, username }) {
   const [Data, setData] = useState(data);
 
   const [weeklyData, setWeeklyData] = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState("");
   const processWeeklyData = (pullRequests) => {
     const Data = {};
     pullRequests.forEach((pr) => {
@@ -25,10 +24,14 @@ export default function StatisticsComponent({ data, repos }) {
       Data[weekStartStr].totalDevTime += pr.developmentTimeSeconds;
       Data[weekStartStr].count += 1;
     });
+
     const formattedData = Object.keys(Data).map((week) => ({
       week,
       averageDevTime: Data[week].totalDevTime / Data[week].count,
     }));
+
+    formattedData.sort((a, b) => new Date(b.week) - new Date(a.week));
+
     setWeeklyData(formattedData);
   };
 
@@ -39,8 +42,7 @@ export default function StatisticsComponent({ data, repos }) {
   }, [Data]);
   const handleChange = async (e) => {
     const repo = e.target.value;
-    setSelectedRepo(repo);
-    const data = await GetStatitics(repo);
+    const data = await GetStatitics(repo, username);
     setData(data?.data);
   };
   return (
@@ -51,7 +53,6 @@ export default function StatisticsComponent({ data, repos }) {
             fullWidth
             select
             defaultValue=""
-            value={selectedRepo}
             SelectProps={{
               displayEmpty: true,
               onChange: (e) => {

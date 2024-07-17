@@ -93,12 +93,16 @@ class PullsRepository {
     }
   }
 
-  async getRepoPulls(repo) {
+  async getRepoPulls(username, repo) {
     let data = [];
+
     if (repo) {
       data = await this.prisma.pulls.findMany({
         where: {
-          repo_name: repo,
+          repository: {
+            userName: username,
+            name: repo,
+          },
         },
         include: {
           commits: true,
@@ -106,12 +110,18 @@ class PullsRepository {
       });
     } else {
       data = await this.prisma.pulls.findMany({
+        where: {
+          repository: {
+            userName: username,
+          },
+        },
         include: {
           commits: true,
         },
       });
     }
-    const serializablePullRequests = data.map((pr) => {
+
+    const serializablePullRequests = await data?.map((pr) => {
       return {
         ...pr,
         merged_at: pr.merged_at ? pr.merged_at.toISOString() : null,
@@ -126,8 +136,13 @@ class PullsRepository {
     return serializablePullRequests;
   }
 
-  getUniqueRepo() {
+  getUniqueRepo(username) {
     const uniqueRepos = this.prisma.pulls.findMany({
+      where: {
+        repository: {
+          userName: username,
+        },
+      },
       distinct: ["repo_name"],
       select: {
         repo_name: true,
