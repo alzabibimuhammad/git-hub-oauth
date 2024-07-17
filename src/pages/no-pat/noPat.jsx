@@ -16,7 +16,6 @@ import { getUserName } from "@/api/github";
 export default function NoPat({ id }) {
   const [pat, setPat] = useState("");
   const route = useRouter();
-  console.log("hi id", id);
 
   const handleSubmit = async () => {
     if (pat) {

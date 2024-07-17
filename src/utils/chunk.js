@@ -1,4 +1,3 @@
-// utils/chunk.js
 export default function chunkArray(array, chunkSize) {
   const chunks = [];
   for (let i = 0; i < array.length; i += chunkSize) {
