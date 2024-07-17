@@ -5,8 +5,6 @@ import RepoService from "../../../services/repositories.mjs";
 
 const handler = async (req, res) => {
   const { username, pat } = req.body;
-  console.log("username", username);
-  console.log("pat", pat);
   try {
     const githubService = new GitHubServices();
     const pullRequestService = new PullRequestService(githubService);
