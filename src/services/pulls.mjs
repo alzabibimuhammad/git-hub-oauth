@@ -7,28 +7,39 @@ class PullRequestService {
   }
 
   async fetchAndSavePullRequests(repoName, accessToken) {
-    const pullRequests = await this.fetchPullRequests(repoName, accessToken);
-    if (!Array.isArray(pullRequests) || !pullRequests?.length) {
-      console.error(
-        `Expected an array of pull requests, but got:`,
-        pullRequests
+    let page = 1;
+    while (true) {
+      const pullRequests = await this.fetchPullRequests(
+        repoName,
+        accessToken,
+        page
       );
-      return [];
+      if (!Array.isArray(pullRequests) || !pullRequests?.length) {
+        console.error(
+          `Expected an array of pull requests, but got:`,
+          pullRequests
+        );
+        return [];
+      }
+      await this.savePulls(pullRequests, repoName);
+
+      if (pullRequests?.length !== 100) break;
+      page++;
     }
-    const savedPullRequests = await this.savePulls(pullRequests, repoName);
+    const savedPullRequests = this.getPulls(repoName?.split("/")[1]);
     return savedPullRequests;
   }
 
-  fetchPullRequests(repoName, accessToken) {
-    return this.githubServices.getPulls(repoName, accessToken);
+  fetchPullRequests(repoName, accessToken, page) {
+    return this.githubServices.getPulls(repoName, accessToken, page);
   }
 
   savePulls(pulls, repoName) {
     return this.pullsRepository.store(pulls, repoName);
   }
 
-  getPulls() {
-    return this.pullsRepository.getPulls();
+  getPulls(repo) {
+    return this.pullsRepository.getPulls(repo);
   }
 
   getRepoPulls(username, repo) {

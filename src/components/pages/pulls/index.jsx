@@ -78,7 +78,7 @@ export default function PullsComponent({ data, error }) {
                         <Typography variant="p">
                           Development Time:{" "}
                           <Typography variant="p" sx={{ color: "red" }}>
-                            {pr.developmentTimeSeconds}
+                            {pr.developmentTimeSeconds} seconds
                           </Typography>
                         </Typography>
                       }

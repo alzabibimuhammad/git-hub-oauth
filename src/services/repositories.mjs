@@ -27,14 +27,18 @@ class RepoService {
     return this.repoRepository.upsertRepositories(repos, this.CHUNK_SIZE);
   }
 
-  fetchUserRepos() {
-    return this.githubService.getRepositories(this.accessToken, this.username);
+  fetchUserRepos(page) {
+    return this.githubService.getRepositories(
+      this.accessToken,
+      this.username,
+      page
+    );
   }
 
-  async fetchAndSaveRepositories(username, accessToken) {
-    const repos = await this.fetchUserRepos(username, accessToken);
+  async fetchAndSaveRepositories(page) {
+    const repos = await this.fetchUserRepos(page);
     await this.upsertRepositories(repos);
-    return repos;
+    return;
   }
 
   async fetchPullRequestsForRepos(repos) {
@@ -42,7 +46,7 @@ class RepoService {
     for (const repo of repos) {
       const pullRequests =
         await this.pullRequestService.fetchAndSavePullRequests(
-          repo.full_name,
+          repo.userName + "/" + repo.name,
           this.accessToken
         );
       if (Array.isArray(pullRequests)) {
@@ -68,13 +72,17 @@ class RepoService {
   }
 
   async run() {
-    const repos = await this.fetchAndSaveRepositories(
-      this.username,
-      this.accessToken
-    );
-    await this.fetchPullRequestsForRepos(repos, this.accessToken);
+    let page = 1;
+    while (true) {
+      const repos = await this.fetchAndSaveRepositories(page);
+      if (repos?.length !== 100) break;
+      page++;
+    }
+    const repo = await this.getUserRepositories();
+    await this.fetchPullRequestsForRepos(repo, this.accessToken);
     const pulls = await this.pullRequestService.getRepoPulls(this.username);
     await this.commitService.fetchAndSaveCommits(pulls, this.accessToken);
+    console.log("done");
     return pulls;
   }
 }

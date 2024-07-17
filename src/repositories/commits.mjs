@@ -31,5 +31,13 @@ class CommitsRepository {
   getCommits() {
     return this.prisma.commits.findMany();
   }
+  getCommitsForPulls(prNumber, repoName) {
+    return prisma.commits.findMany({
+      where: {
+        pullsNumber: prNumber,
+        repo_name: repoName,
+      },
+    });
+  }
 }
 export default CommitsRepository;

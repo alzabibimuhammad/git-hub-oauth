@@ -50,25 +50,17 @@ class PullsRepository {
       });
   }
 
-  async getPulls() {
-    const data = await this.prisma.pulls.findMany({
+  async getPulls(repo) {
+    return this.prisma.pulls.findMany({
+      where: {
+        repository: {
+          name: repo,
+        },
+      },
       include: {
         commits: true,
       },
     });
-    const serializablePullRequests = data.map((pr) => {
-      return {
-        ...pr,
-        merged_at: pr.merged_at ? pr.merged_at.toISOString() : null,
-        createdAtDB: pr.createdAtDB.toISOString(),
-        commits: pr.commits.map((commit) => ({
-          ...commit,
-          date: commit.date.toISOString(),
-          createdAtDB: commit.createdAtDB.toISOString(),
-        })),
-      };
-    });
-    return serializablePullRequests;
   }
 
   async updatePullRequestDevelopmentTime(
