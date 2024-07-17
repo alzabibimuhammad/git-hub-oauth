@@ -1,8 +1,10 @@
 class GitHubServices {
   constructor() {}
-  async getRepositories(token, username) {
+  async getRepositories(token, username, page) {
     const response = await fetch(
-      `https://api.github.com/users/${username}/repos?per_page=100`,
+      `https://api.github.com/users/${username}/repos?per_page=100&page=${
+        page ? page : 1
+      }`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -20,9 +22,11 @@ class GitHubServices {
     return response.json();
   }
 
-  async getPulls(repoName, token) {
+  async getPulls(repoName, token, page) {
     const response = await fetch(
-      `https://api.github.com/repos/${repoName}/pulls?state=closed&per_page=100`,
+      `https://api.github.com/repos/${repoName}/pulls?state=closed&per_page=100&page=${
+        page ? page : 1
+      }`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -40,13 +44,17 @@ class GitHubServices {
     return response.json();
   }
 
-  async fetchCommits(commitsUrl, accessToken, prNumber) {
+  async fetchCommits(commitsUrl, accessToken, prNumber, page) {
+    console.log("🚀 ~ GitHubServices ~ fetchCommits ~ page:", page);
     try {
-      const commitsResponse = await fetch(commitsUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const commitsResponse = await fetch(
+        commitsUrl + `?per_page=100&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       if (!commitsResponse.ok) {
         throw new Error(
